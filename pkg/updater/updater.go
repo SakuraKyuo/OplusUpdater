@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	"log"
 )
 
 type QueryUpdateArgs struct {
@@ -51,6 +52,12 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	
+	    // [!+++] 打印加密参数
+    log.Printf("[DEBUG] AES Key (hex): %x\n", key)
+    log.Printf("[DEBUG] AES IV (hex): %x\n", iv)
+    log.Printf("[DEBUG] Protected Key: %s\n", protectedKey)
+
 
 	var deviceId string
 	if len(strings.TrimSpace(args.IMEI)) == 0 {
@@ -71,6 +78,10 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 		"deviceId":       deviceId,
 		"Content-Type":   "application/json; charset=utf-8",
 	}
+	    // [!+++] 打印请求头
+    log.Println("[DEBUG] ==== 请求头 ====")
+    log.Printf("[DEBUG] %s\n", requestHeaders)
+    
 	pkm := map[string]CryptoConfig{
 		"SCENE_1": {
 			ProtectedKey:       protectedKey,
@@ -78,6 +89,10 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 			NegotiationVersion: config.PublicKeyVersion,
 		},
 	}
+	    // [!+++] 打印请求加密
+    log.Println("[DEBUG] ==== 请求加密 ====")
+    log.Printf("[DEBUG] %s\n", pkm)
+
 	if pk, err := json.Marshal(pkm); err == nil {
 		requestHeaders["protectedKey"] = string(pk)
 	} else {
@@ -109,6 +124,11 @@ func QueryUpdate(args *QueryUpdateArgs) (*ResponseResult, error) {
 	} else {
 		return nil, err
 	}
+	
+	    // [!+++] 打印请求体
+    log.Println("[DEBUG] ==== 请求体 ====")
+    log.Printf("[DEBUG] %s\n", requestBody)
+
 
 	client := resty.New()
 	if p := strings.TrimSpace(args.Proxy); len(p) > 0 {
