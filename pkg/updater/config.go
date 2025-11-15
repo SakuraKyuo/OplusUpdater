@@ -20,6 +20,10 @@ const (
 	RegionTr = "TR"
 	RegionTh = "TH"
 	RegionGl = "GL"
+	RegionId = "ID"
+	RegionTw = "TW"
+	RegionMy = "MY"
+	RegionVn = "VN"
 )
 
 const commonHost = "component-ota-sg.allawnos.com"
@@ -43,6 +47,10 @@ func GetConfig(region string, gray int) *Config {
 		RegionTr: {"01010001", "tr-TR"},
 		RegionTh: {"00111001", "th-TH"},
 		RegionGl: {"10100111", "en-US"},
+		RegionId: {"00110011", "id-ID"},
+                RegionTw: {"00011010", "zh-TW"},
+                RegionMy: {"00111000", "ms-MY"},
+                RegionVn: {"00111100", "vi-VN"},
 	}
 
 	if override, ok := regionOverrides[region]; ok {
